@@ -1,6 +1,6 @@
 import { NextRequest } from "next/server";
 import { frames } from "../frames";
-import { getBook } from "@/app/utils/get-book";
+import { getBook } from "@/utils/get-book";
 
 export async function GET(
   request: NextRequest,

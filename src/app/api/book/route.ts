@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { getBook } from '@/app/utils/get-book';
+import { getBook } from '@/utils/get-book';
 import fs from 'fs';
 import path from 'path';
 
