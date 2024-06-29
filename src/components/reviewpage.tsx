@@ -3,20 +3,15 @@
 import { useEffect, useState } from "react";
 import Image from "next/image";
 import Rating from "./ui/star";
+import axios from "axios";
+import { AxiosError } from "axios";
 import { Textarea } from "@/components/ui/textarea";
 import { StarIcon } from "./icons";
 import { Button } from "@/components/ui/button";
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 import { useNeynarContext } from "@neynar/react";
-import { parseComment, getStarsEmoji } from "@/utils/parseComment";
-
-interface Book {
-  isbn: number;
-  cover_image_url: string;
-  title: string;
-  authors: string;
-  subtitle: string;
-}
+import { parseComment } from "@/utils/parseComment";
+import { set } from "zod";
 
 const Review = ({ ISBN }: { ISBN: number }) => {
   const [book, setBook] = useState<Book | null>(null);
@@ -42,7 +37,7 @@ const Review = ({ ISBN }: { ISBN: number }) => {
     e.preventDefault();
 
     // Parse the comment text with star emojis
-    const parsedComment = parseComment(comment, rating);
+    const parsedComment = await parseComment(comment, rating, ISBN);
     console.log("Parsed comment:", parsedComment);
 
     try {
@@ -61,7 +56,9 @@ const Review = ({ ISBN }: { ISBN: number }) => {
 
       if (response.ok) {
         console.log('Review submitted successfully');
+        alert("Review Published!");
         setComment('');
+        setRating(0);
       } else {
         console.error('Failed to submit review');
       }
