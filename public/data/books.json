@@ -1,0 +1,42 @@
+[
+  {
+    "title": "Zero to One",
+    "subtitle": "Notes on Startups, or How to Build the Future",
+    "authors": "Peter A. Thiel, Blake Masters",
+    "publish_date": "Sep 16, 2014",
+    "cover_image_url": "https://covers.openlibrary.org/b/id/9002334-L.jpg",
+    "isbn": 9780804165259
+  },
+  {
+    "title": "Elon Musk",
+    "subtitle": "N/A",
+    "authors": "Walter Isaacson",
+    "publish_date": "2023",
+    "cover_image_url": "https://covers.openlibrary.org/b/id/14420016-L.jpg",
+    "isbn": 9781982181284
+  },
+  {
+    "title": "The Lean Startup",
+    "subtitle": "How Today's Entrepreneurs Use Continuous Innovation to Create Radically Successful Businesses",
+    "authors": "Eric Ries",
+    "publish_date": "September 13, 2011",
+    "cover_image_url": "https://covers.openlibrary.org/b/id/7104760-L.jpg",
+    "isbn": 9780307887894
+  },
+  {
+    "title": "Why We Sleep",
+    "subtitle": "Unlocking the Power of Sleep and Dreams",
+    "authors": "Matthew Walker",
+    "publish_date": "2017",
+    "cover_image_url": "https://covers.openlibrary.org/b/id/14409715-L.jpg",
+    "isbn": 9781501144332
+  },
+  {
+    "title": "The Hunger Games",
+    "subtitle": "N/A",
+    "authors": "Suzanne Collins",
+    "publish_date": "2008-10",
+    "cover_image_url": "https://covers.openlibrary.org/b/id/14552116-L.jpg",
+    "isbn": 9780439023481
+  }
+]
