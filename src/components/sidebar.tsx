@@ -1,7 +1,4 @@
 "use client"
-interface ErrorRes {
-  message: string;
-}
 
 import axios from 'axios';
 import { AxiosError } from 'axios';

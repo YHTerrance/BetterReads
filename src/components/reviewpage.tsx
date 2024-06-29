@@ -3,23 +3,13 @@
 import { useEffect, useState } from "react";
 import Image from "next/image";
 import Rating  from "./ui/star"
+import axios from "axios";
+import { AxiosError } from "axios";
 import { Textarea } from "@/components/ui/textarea"
 import { StarIcon } from "./icons";
 import { Button } from "@/components/ui/button"
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar"
 
-
-interface Props {
-  slug: string;
-}
-
-interface Book {
-  isbn: number;
-  cover_image_url: string;
-  title: string;
-  authors: string;
-  subtitle: string;
-}
 
 const Review = ({ISBN}: {ISBN: number}) => {
   const [book, setBook] = useState<Book | null>(null);
@@ -27,13 +17,11 @@ const Review = ({ISBN}: {ISBN: number}) => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await fetch(`/data/books.json`);
-        const data: Book[] = await response.json();
-        const selectedBook = data.find((item) => Number(item.isbn) === Number(ISBN));
-
-        setBook(selectedBook || null);
-      } catch (error) {
-        console.error("Error fetching data:", error);
+        const response = await axios.get<{ book: Book }>(`/api/book?isbn=${ISBN}`);
+        setBook(response.data.book);
+      } catch (err) {
+        const { message } = (err as AxiosError).response?.data as ErrorRes;
+        alert(message);
       }
     };
 
