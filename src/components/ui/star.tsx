@@ -1,10 +1,13 @@
-import React, { useState } from 'react';
-import {StarIcon} from '../../components/icons';
+import React from 'react';
+import { StarIcon } from '../../components/icons';
 
-function Rating() {
-  const [rating, setRating] = useState(0);
+interface RatingProps {
+  rating: number;
+  setRating: (rating: number) => void;
+}
 
-  const handleRatingChange = (newRating) => {
+const Rating: React.FC<RatingProps> = ({ rating, setRating }) => {
+  const handleRatingChange = (newRating: number) => {
     setRating(newRating);
   };
 
@@ -26,6 +29,6 @@ function Rating() {
       <span className="ml-2 text-gray-500">{rating} stars</span>
     </div>
   );
-}
+};
 
 export default Rating;
