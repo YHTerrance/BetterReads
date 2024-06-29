@@ -3,7 +3,7 @@ import Sidebar from "../components/sidebar"
 import BookGrid from "../components/book-grid"
 import Footer from "../components/footer"
 
-export default function Landing() {
+export default function Home() {
   return (
     <div className="flex flex-col min-h-screen">
     <Navbar></Navbar>

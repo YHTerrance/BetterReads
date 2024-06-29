@@ -1,26 +1,24 @@
-'use client'
+"use client";
 import { useEffect, useState } from "react";
-import Link from "next/link";
+import axios from "axios";
+import { AxiosError } from "axios";
 import Image from "next/image";
 import { Card, CardContent } from "@/components/ui/card";
 import { StarIcon } from "./icons";
-
-interface Book {
-  isbn: string;
-  cover_image_url: string;
-  title: string;
-  authors: string;
-  subtitle: string;
-}
+import Link from "next/link";
 
 const BookGrid = () => {
-  const [books, setBooks] = useState([]);
+  const [books, setBooks] = useState([] as Book[]);
 
   useEffect(() => {
     const fetchData = async () => {
-      const response = await fetch("/data/books.json");
-      const result = await response.json();
-      setBooks(result);
+      try {
+        const response = await axios.get<{ books: Book[] }>("/api/books");
+        setBooks(response.data.books);
+      } catch (err) {
+        const { message } = (err as AxiosError).response?.data as ErrorRes;
+        alert(message);
+      }
     };
     fetchData();
   }, []);
@@ -39,10 +37,10 @@ const BookGrid = () => {
               alt="Book Cover"
               width={200}
               height={300}
-              className="rounded-md mb-4 size-60"
+              className="rounded-md mb-4"
             />
-           <Link href={`/reviews/${book.isbn}`}>
-            <h3 className="text-lg font-bold mb-2">{book.title}</h3>
+            <Link href={`/reviews/${book.isbn}`}>
+              <h3 className="text-lg font-bold mb-2">{book.title}</h3>
             </Link>
             <p className="text-muted-foreground text-sm mb-2">{book.authors}</p>
             <div className="flex items-center gap-1 text-yellow-500 mb-4">

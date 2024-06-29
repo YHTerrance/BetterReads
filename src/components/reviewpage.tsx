@@ -27,13 +27,11 @@ const Review = ({ ISBN }: { ISBN: number }) => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await fetch(`/data/books.json`);
-        const data: Book[] = await response.json();
-        const selectedBook = data.find((item) => Number(item.isbn) === Number(ISBN));
-
-        setBook(selectedBook || null);
-      } catch (error) {
-        console.error("Error fetching data:", error);
+        const response = await axios.get<{ book: Book }>(`/api/book?isbn=${ISBN}`);
+        setBook(response.data.book);
+      } catch (err) {
+        const { message } = (err as AxiosError).response?.data as ErrorRes;
+        alert(message);
       }
     };
 

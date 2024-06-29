@@ -5,7 +5,9 @@
     "authors": "Peter A. Thiel, Blake Masters",
     "publish_date": "Sep 16, 2014",
     "cover_image_url": "https://covers.openlibrary.org/b/id/9002334-L.jpg",
-    "isbn": 9780804165259
+    "isbn": 9780804165259,
+    "average_rating": 4.5, 
+    "rating_count": 192
   },
   {
     "title": "Elon Musk",
