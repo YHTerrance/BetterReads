@@ -32,7 +32,10 @@ export async function POST(request: NextRequest) {
   const supabase = createClient();
 
   try {
-    const { hash } = await client.publishCast(signerUuid, text, { channelId: channel_id });
+    
+    const frame_url = `https://better-reads-mauve.vercel.app/frames/${isbn}`
+
+    const { hash } = await client.publishCast(signerUuid, text, { channelId: channel_id, embeds: [ { url: frame_url } ] });
     console.log("Cast published successfully with hash:", hash);
     
     // save review to supabase
