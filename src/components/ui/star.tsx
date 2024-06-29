@@ -4,7 +4,7 @@ import {StarIcon} from '../../components/icons';
 function Rating() {
   const [rating, setRating] = useState(0);
 
-  const handleRatingChange = (newRating) => {
+  const handleRatingChange = (newRating: number) => {
     setRating(newRating);
   };
 
