@@ -6,7 +6,10 @@ interface RatingProps {
   setRating: (rating: number) => void;
 }
 
+<<<<<<< HEAD
 const Rating: React.FC<RatingProps> = ({ rating, setRating }) => {
+=======
+>>>>>>> main
   const handleRatingChange = (newRating: number) => {
     setRating(newRating);
   };
