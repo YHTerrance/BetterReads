@@ -8,6 +8,7 @@ import { StarIcon } from "./icons";
 import { Button } from "@/components/ui/button";
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 import { useNeynarContext } from "@neynar/react";
+import { parseComment, getStarsEmoji } from "@/utils/parseComment";
 
 interface Book {
   isbn: number;
@@ -42,6 +43,10 @@ const Review = ({ ISBN }: { ISBN: number }) => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
+    // Parse the comment text with star emojis
+    const parsedComment = parseComment(comment, rating);
+    console.log("Parsed comment:", parsedComment);
+
     try {
       const response = await fetch('/api/review', {
         method: 'POST',
@@ -52,7 +57,7 @@ const Review = ({ ISBN }: { ISBN: number }) => {
           signerUuid: user?.signer_uuid,
           isbn: ISBN.toString(),
           rating: rating.toString(),
-          text: comment,
+          text: parsedComment,
         }),
       });
 
