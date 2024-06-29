@@ -14,7 +14,7 @@ const Navbar = () => {
           <span className="text-xl font-bold">BetterReads</span>
         </Link>
         <nav className="hidden md:flex items-center gap-6">
-          <Link href="#" className="hover:underline" prefetch={false}>
+          <Link href="/" className="hover:underline" prefetch={false}>
             Home
           </Link>
           <Link href="#" className="hover:underline" prefetch={false}>

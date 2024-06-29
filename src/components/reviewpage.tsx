@@ -2,10 +2,12 @@
 
 import { useEffect, useState } from "react";
 import Image from "next/image";
+import Rating  from "./ui/star"
 import { Textarea } from "@/components/ui/textarea"
 import { StarIcon } from "./icons";
 import { Button } from "@/components/ui/button"
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar"
+
 
 interface Props {
   slug: string;
@@ -58,15 +60,9 @@ const Review = ({ISBN}: {ISBN: number}) => {
           <div>
             <h1 className="text-3xl font-bold">{book.title}</h1>
             <p className="text-muted-foreground">by {book.authors}</p>
-          </div>
-          <div className="text-sm leading-relaxed text-muted-foreground">
-            <p>{book.subtitle}</p>
-          </div>
-        </div>
-      </div>
-      <div className="grid gap-4">
+            <div className="grid gap-4">
         <div className="flex items-center gap-4">
-        <span className="text-muted-foreground">4.2 out of 5</span>
+        <span className="text-muted-foreground">4.2/5 (299)</span>
           <div className="flex items-center gap-0.5">
               <StarIcon className="w-4 h-4" />
               <StarIcon className="w-4 h-4" />
@@ -76,12 +72,21 @@ const Review = ({ISBN}: {ISBN: number}) => {
           </div>
         </div>
       </div>
+          </div>
+          <div className="text-sm leading-relaxed text-muted-foreground">
+            <p>{book.subtitle}</p>
+          </div>
+        </div>
+      </div>
+
       <div className="space-y-4">
         <h2 className="text-2xl font-bold">Comments</h2>
+        <Rating/>
         <form className="flex gap-2">
           <Textarea placeholder="Write your comment..." className="flex-1 min-h-[100px] resize-none" />
           <Button type="submit">Submit</Button>
         </form>
+        <div className="space-y-4 text-2xl font-bold">369 Comments</div>
       </div>
       <div className="space-y-4">
         <div className="flex items-start gap-4">
@@ -95,8 +100,7 @@ const Review = ({ISBN}: {ISBN: number}) => {
               <div className="text-xs text-muted-foreground">5 minutes ago</div>
             </div>
             <div>
-              I really love the ecosystem Vercel is creating. The way each component can be added and modified with ease
-              really makes these tools attractive.
+            你说的对，但是《原神》是由米哈游自主研发的一款全新开放世界冒险游戏。游戏发生在一个被称作「提瓦特」的幻想世界，在这里，被神选中的人将被授予「神之眼」，导引元素之力。你将扮演一位名为「旅行者」的神秘角色在自由的旅行中邂逅性格各异、能力独特的同伴们，和他们一起击败强敌，找回失散的亲人——同时，逐步发掘「原神」的真相。
             </div>
           </div>
         </div>
@@ -111,7 +115,7 @@ const Review = ({ISBN}: {ISBN: number}) => {
               <div className="text-xs text-muted-foreground">2 hours ago</div>
             </div>
             <div>
-              We are more than excited to leverage all the new stuff, building better products for our clients ✨
+            這是能蟲，能蟲屬於昆蟲綱鞘翅目，雜食非常凶殘，體内經常有很多病毒。在唐朝就已經出現，被劍客李白一劍殺死。有文獻記載：要是能蟲來，我要選李白。
             </div>
           </div>
         </div>
@@ -125,7 +129,7 @@ const Review = ({ISBN}: {ISBN: number}) => {
               <div className="font-semibold">@greed7513</div>
               <div className="text-xs text-muted-foreground">1 day ago</div>
             </div>
-            <div>does anyone know which monospace are they using when showing code?</div>
+            <div>哥删了呗，我是无所谓的，但是我一个朋友可能有点汗流浃背了，他不太舒服想睡了，当然不是我哈，我一直都是行的，以一个旁观者的心态看吧，也不至于破防吧，就是想照顾下我朋友的感受，他有点破防了，还是建议删了吧，当然删不删随你，我是没感觉的，就是为朋友感到不平罢了，也不是那么简单破防的。</div>
           </div>
         </div>
       </div>
