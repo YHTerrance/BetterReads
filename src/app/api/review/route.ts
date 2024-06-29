@@ -33,7 +33,7 @@ export async function POST(request: NextRequest) {
 
   try {
     
-    const frame_url = `https://better-reads-mauve.vercel.app/frames/${isbn}`
+    const frame_url = `https://better-reads-mauve.vercel.app/reviews/${isbn}`
 
     const { hash } = await client.publishCast(signerUuid, text, { channelId: channel_id, embeds: [ { url: frame_url } ] });
     console.log("Cast published successfully with hash:", hash);
