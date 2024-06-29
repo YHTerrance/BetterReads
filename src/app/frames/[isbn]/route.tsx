@@ -1,4 +1,3 @@
-/* eslint-disable react/jsx-key */
 import { NextRequest } from "next/server";
 import { frames } from "../frames";
 import { getBook } from "@/app/utils/get-book";
@@ -7,11 +6,10 @@ export async function GET(
   request: NextRequest,
   { params }: { params: { isbn: number } }
 ) {
-  console.log("ISBN Number:", params.isbn);
 
   const book = getBook(params.isbn);
-
-  const handleRequest = frames(async (ctx) => {
+  
+  const handleRequest = frames(async () => {
     return {
       image: (
         <div
@@ -103,41 +101,16 @@ export async function GET(
               </svg>
               <span style={{ marginLeft: 5, color: '#666' }}>(235)</span>
             </div>
-            <div style={{ marginTop: 10, color: '#333', wordBreak: 'break-word' }}>
-              {book.title}: {book.subtitle}
+            <div style={{ marginTop: 10, color: '#333', wordBreak: 'break-word', fontSize: "32px" }}>
+              {book.title}
+            </div>
+            <div style={{ marginTop: 10, color: '#333', wordBreak: 'break-word', fontSize: "24px" }}>
+              {book.subtitle}
             </div>
           </div>
-        </div>
+        </div>  
       ),
-      imageOptions: {
-        width: 800,
-        height: 400,
-      }
     };
   });
-
   return handleRequest(request);
 }
-
-// const handleRequest = frames(async (ctx) => {
-//   return {
-//     image: (
-//       <span>
-//         {ctx.pressedButton
-//           ? `I clicked ${ctx.searchParams.value}`
-//           : `this is `}
-//       </span>
-//     ),
-//     buttons: [
-//       <Button action="post" target={{ query: { value: "Yes" } }}>
-//         Say Yes
-//       </Button>,
-//       <Button action="post" target={{ query: { value: "No" } }}>
-//         Say No
-//       </Button>,
-//     ],
-//   };
-// });
- 
-// export const GET = handleRequest;
-// export const POST = handleRequest;
