@@ -1,5 +1,6 @@
 'use client'
 import { useEffect, useState } from "react";
+import Link from "next/link";
 import Image from "next/image";
 import { Card, CardContent } from "@/components/ui/card";
 import { StarIcon } from "./icons";
@@ -38,9 +39,11 @@ const BookGrid = () => {
               alt="Book Cover"
               width={200}
               height={300}
-              className="rounded-md mb-4"
+              className="rounded-md mb-4 size-60"
             />
+           <Link href={`/reviews/${book.isbn}`}>
             <h3 className="text-lg font-bold mb-2">{book.title}</h3>
+            </Link>
             <p className="text-muted-foreground text-sm mb-2">{book.authors}</p>
             <div className="flex items-center gap-1 text-yellow-500 mb-4">
               <StarIcon className="w-4 h-4" />
