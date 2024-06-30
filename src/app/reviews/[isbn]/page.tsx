@@ -5,14 +5,15 @@ import Review from "@/components/reviewpage";
 import { fetchMetadata } from "frames.js/next";
 
 export async function generateMetadata({ params }: { params: { isbn: number } }) {
+  
   return {
-    title: "My Page",
+    title: "Book Page",
     // provide a full URL to your /frames endpoint
     other: await fetchMetadata(
       new URL(
         `/frames/${params.isbn}`,
         process.env.VERCEL_URL
-          ? `https://${process.env.VERCEL_URL}`
+          ? "https://better-reads-mauve.vercel.app/"
           : "http://localhost:3000"
       )
     ),
