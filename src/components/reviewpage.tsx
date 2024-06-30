@@ -2,25 +2,26 @@
 
 import { useEffect, useState } from "react";
 import Image from "next/image";
-import Rating  from "./ui/star"
+import Link from "next/link";
+import Rating from "./ui/star";
 import axios from "axios";
 import { AxiosError } from "axios";
-import { Textarea } from "@/components/ui/textarea"
+import { Textarea } from "@/components/ui/textarea";
 import { StarIcon } from "./icons";
 import { Button } from "@/components/ui/button";
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 import { useNeynarContext } from "@neynar/react";
 import { parseComment } from "@/utils/parseComment";
-import { set } from "zod";
 
 const Review = ({ ISBN }: { ISBN: number }) => {
   const [book, setBook] = useState<Book | null>(null);
   const [rating, setRating] = useState(0);
   const [comment, setComment] = useState("");
+  const [reviews, setReviews] = useState<Review[]>([]);
   const { user } = useNeynarContext();
 
   useEffect(() => {
-    const fetchData = async () => {
+    const fetchBookData = async () => {
       try {
         const response = await axios.get<{ book: Book }>(`/api/book?isbn=${ISBN}`);
         setBook(response.data.book);
@@ -30,7 +31,17 @@ const Review = ({ ISBN }: { ISBN: number }) => {
       }
     };
 
-    fetchData();
+    const fetchReviews = async () => {
+      try {
+        const response = await axios.get<Review[]>(`/api/review/${ISBN}`);
+        setReviews(response.data);
+      } catch (error) {
+        console.error("Error fetching reviews:", error);
+      }
+    };
+
+    fetchBookData();
+    fetchReviews();
   }, [ISBN]);
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -38,7 +49,6 @@ const Review = ({ ISBN }: { ISBN: number }) => {
 
     // Parse the comment text with star emojis
     const parsedComment = await parseComment(comment, rating, ISBN);
-    console.log("Parsed comment:", parsedComment);
 
     try {
       const response = await fetch('/api/review', {
@@ -59,6 +69,9 @@ const Review = ({ ISBN }: { ISBN: number }) => {
         alert("Review Published!");
         setComment('');
         setRating(0);
+        // Re-fetch reviews after submitting a new review
+        const reviewResponse = await axios.get<Review[]>(`/api/review/${ISBN}`);
+        setReviews(reviewResponse.data);
       } else {
         console.error('Failed to submit review');
       }
@@ -118,51 +131,37 @@ const Review = ({ ISBN }: { ISBN: number }) => {
           />
           <Button type="submit">Submit</Button>
         </form>
-        <div className="space-y-4 text-2xl font-bold">369 Comments</div>
-      </div>
-      <div className="space-y-4">
-        <div className="flex items-start gap-4">
-          <Avatar className="w-10 h-10 border">
-            <AvatarImage src="/placeholder-user.jpg" />
-            <AvatarFallback>AC</AvatarFallback>
-          </Avatar>
-          <div className="grid gap-1.5">
-            <div className="flex items-center gap-2">
-              <div className="font-semibold">@iamwillpursell</div>
-              <div className="text-xs text-muted-foreground">5 minutes ago</div>
-            </div>
-            <div>
-              你说的对，但是《原神》是由米哈游自主研发的一款全新开放世界冒险游戏。游戏发生在一个被称作「提瓦特」的幻想世界，在这里，被神选中的人将被授予「神之眼」，导引元素之力。你将扮演一位名为「旅行者」的神秘角色在自由的旅行中邂逅性格各异、能力独特的同伴们，和他们一起击败强敌，找回失散的亲人——同时，逐步发掘「原神」的真相。
-            </div>
-          </div>
-        </div>
-        <div className="flex items-start gap-4">
-          <Avatar className="w-10 h-10 border">
-            <AvatarImage src="/placeholder-user.jpg" />
-            <AvatarFallback>AC</AvatarFallback>
-          </Avatar>
-          <div className="grid gap-1.5">
-            <div className="flex items-center gap-2">
-              <div className="font-semibold">@HackSoft</div>
-              <div className="text-xs text-muted-foreground">2 hours ago</div>
-            </div>
-            <div>
-              這是能蟲，能蟲屬於昆蟲綱鞘翅目，雜食非常凶殘，體内經常有很多病毒。在唐朝就已經出現，被劍客李白一劍殺死。有文獻記載：要是能蟲來，我要選李白。
-            </div>
-          </div>
-        </div>
-        <div className="flex items-start gap-4">
-          <Avatar className="w-10 h-10 border">
-            <AvatarImage src="/placeholder-user.jpg" />
-            <AvatarFallback>AC</AvatarFallback>
-          </Avatar>
-          <div className="grid gap-1.5">
-            <div className="flex items-center gap-2">
-              <div className="font-semibold">@greed7513</div>
-              <div className="text-xs text-muted-foreground">1 day ago</div>
-            </div>
-            <div>哥删了呗，我是无所谓的，但是我一个朋友可能有点汗流浃背了，他不太舒服想睡了，当然不是我哈，我一直都是行的，以一个旁观者的心态看吧，也不至于破防吧，就是想照顾下我朋友的感受，他有点破防了，还是建议删了吧，当然删不删随你，我是没感觉的，就是为朋友感到不平罢了，也不是那么简单破防的。</div>
-          </div>
+        <div className="space-y-4 text-2xl font-bold">{reviews.length} Comments</div>
+        <div className="space-y-4">
+          {reviews.map((review) => (
+            <Link
+              key={review.cast.hash}
+              href={`https://warpcast.com/${review.cast.author.username}/${review.cast.hash.slice(0, 10)}`}
+              target="_blank"
+              passHref
+            >
+              <Avatar className="w-10 h-10 border">
+                <AvatarImage src={review.cast.author.pfp_url || "/placeholder-user.jpg"} />
+                <AvatarFallback>{review.cast.author.username.charAt(0)}</AvatarFallback>
+              </Avatar>
+              <div className="grid gap-1.5">
+                <div className="flex items-center gap-2">
+                  <div className="font-semibold">@{review.cast.author.username}</div>
+                  <div className="text-xs text-muted-foreground">{new Date(review.cast.timestamp).toLocaleString()}</div>
+                </div>
+                <div>{review.cast.text.split('Comment: ')[1]}</div>
+                <div className="flex items-center gap-2">
+                  <span className="text-sm text-muted-foreground">{review.cast.reactions.likes_count} Likes</span>
+                  <span className="text-sm text-muted-foreground">{review.cast.reactions.recasts_count} Recasts</span>
+                </div>
+                <div className="flex items-center gap-1">
+                  {Array.from({ length: Number(review.rating) }).map((_, index) => (
+                    <StarIcon key={index} className="w-4 h-4 text-yellow-500" />
+                  ))}
+                </div>
+              </div>
+            </Link>
+          ))}
         </div>
       </div>
     </div>
