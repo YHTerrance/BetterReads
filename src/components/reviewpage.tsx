@@ -14,16 +14,19 @@ import { useNeynarContext } from "@neynar/react";
 import { parseComment } from "@/utils/parseComment";
 
 const Review = ({ ISBN }: { ISBN: number }) => {
-  const [book, setBook] = useState<Book | null>(null);
+  const [book, setBook] = useState<any | null>(null);
   const [rating, setRating] = useState(0);
   const [comment, setComment] = useState("");
-  const [reviews, setReviews] = useState<>([]);
+  const [reviews, setReviews] = useState<any[]>([]);
+  const [filteredReviews, setFilteredReviews] = useState<any[]>([]);
+  const [filter, setFilter] = useState<string | number>("all");
+  const [averageRating, setAverageRating] = useState(0);
   const { user } = useNeynarContext();
 
   useEffect(() => {
     const fetchBookData = async () => {
       try {
-        const response = await axios.get<{ book: Book }>(`/api/book?isbn=${ISBN}`);
+        const response = await axios.get<{ book: any }>(`/api/book?isbn=${ISBN}`);
         setBook(response.data.book);
       } catch (err) {
         const { message } = (err as AxiosError).response?.data as ErrorRes;
@@ -43,6 +46,24 @@ const Review = ({ ISBN }: { ISBN: number }) => {
     fetchBookData();
     fetchReviews();
   }, [ISBN]);
+
+  useEffect(() => {
+    const calculateAverageRating = () => {
+      if (reviews.length === 0) return 0;
+      const totalRating = reviews.reduce((acc, review) => acc + Number(review.rating), 0);
+      return totalRating / reviews.length;
+    };
+
+    setAverageRating(calculateAverageRating());
+  }, [reviews]);
+
+  useEffect(() => {
+    if (filter === "all") {
+      setFilteredReviews(reviews);
+    } else {
+      setFilteredReviews(reviews.filter((review) => Number(review.rating) === filter));
+    }
+  }, [filter, reviews]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -102,13 +123,11 @@ const Review = ({ ISBN }: { ISBN: number }) => {
             <p className="text-muted-foreground">by {book.authors}</p>
             <div className="grid gap-4">
               <div className="flex items-center gap-4">
-                <span className="text-muted-foreground">4.2/5 (299)</span>
+                <span className="text-muted-foreground">{averageRating.toFixed(1)}/5 ({reviews.length})</span>
                 <div className="flex items-center gap-0.5">
-                  <StarIcon className="w-4 h-4" />
-                  <StarIcon className="w-4 h-4" />
-                  <StarIcon className="w-4 h-4" />
-                  <StarIcon className="w-4 h-4" />
-                  <StarIcon className="w-4 h-4" />
+                  {Array.from({ length: Math.round(averageRating) }).map((_, index) => (
+                    <StarIcon key={index} className="w-4 h-4 text-yellow-500" />
+                  ))}
                 </div>
               </div>
             </div>
@@ -132,32 +151,41 @@ const Review = ({ ISBN }: { ISBN: number }) => {
           <Button type="submit">Submit</Button>
         </form>
         <div className="space-y-4 text-2xl font-bold">{reviews.length} Comments</div>
+        <div className="flex gap-2">
+          {["all", 5, 4, 3, 2, 1].map((star) => (
+            <Button key={star} onClick={() => setFilter(star)}>
+              {star === "all" ? "All" : `${star} Stars`} ({reviews.filter((review) => star === "all" || Number(review.rating) === star).length})
+            </Button>
+          ))}
+        </div>
         <div className="space-y-4">
-          {reviews.map((review) => (
+          {filteredReviews.map((review: any) => (
             <Link
               key={review.cast.hash}
               href={`https://warpcast.com/${review.cast.author.username}/${review.cast.hash.slice(0, 10)}`}
               target="_blank"
               passHref
             >
-              <Avatar className="w-10 h-10 border">
-                <AvatarImage src={review.cast.author.pfp_url || "/placeholder-user.jpg"} />
-                <AvatarFallback>{review.cast.author.username.charAt(0)}</AvatarFallback>
-              </Avatar>
-              <div className="grid gap-1.5">
-                <div className="flex items-center gap-2">
-                  <div className="font-semibold">@{review.cast.author.username}</div>
-                  <div className="text-xs text-muted-foreground">{new Date(review.cast.timestamp).toLocaleString()}</div>
-                </div>
-                <div>{review.cast.text.split('Comment: ')[1]}</div>
-                <div className="flex items-center gap-2">
-                  <span className="text-sm text-muted-foreground">{review.cast.reactions.likes_count} Likes</span>
-                  <span className="text-sm text-muted-foreground">{review.cast.reactions.recasts_count} Recasts</span>
-                </div>
-                <div className="flex items-center gap-1">
-                  {Array.from({ length: Number(review.rating) }).map((_, index) => (
-                    <StarIcon key={index} className="w-4 h-4 text-yellow-500" />
-                  ))}
+              <div className="flex items-start gap-4 border-b pb-4 mb-4">
+                <Avatar className="w-10 h-10 border">
+                  <AvatarImage src={review.cast.author.pfp_url || "/placeholder-user.jpg"} />
+                  <AvatarFallback>{review.cast.author.username.charAt(0)}</AvatarFallback>
+                </Avatar>
+                <div className="grid gap-1.5">
+                  <div className="flex items-center gap-2">
+                    <div className="font-semibold">@{review.cast.author.username}</div>
+                    <div className="text-xs text-muted-foreground">{new Date(review.cast.timestamp).toLocaleString()}</div>
+                  </div>
+                  <div>{review.cast.text.split('Comment: ')[1]}</div>
+                  <div className="flex items-center gap-2">
+                    <span className="text-sm text-muted-foreground">{review.cast.reactions.likes_count} Likes</span>
+                    <span className="text-sm text-muted-foreground">{review.cast.reactions.recasts_count} Recasts</span>
+                  </div>
+                  <div className="flex items-center gap-1">
+                    {Array.from({ length: Number(review.rating) }).map((_, index) => (
+                      <StarIcon key={index} className="w-4 h-4 text-yellow-500" />
+                    ))}
+                  </div>
                 </div>
               </div>
             </Link>
