@@ -17,7 +17,7 @@ const Review = ({ ISBN }: { ISBN: number }) => {
   const [book, setBook] = useState<Book | null>(null);
   const [rating, setRating] = useState(0);
   const [comment, setComment] = useState("");
-  const [reviews, setReviews] = useState<Review[]>([]);
+  const [reviews, setReviews] = useState<>([]);
   const { user } = useNeynarContext();
 
   useEffect(() => {
@@ -33,7 +33,7 @@ const Review = ({ ISBN }: { ISBN: number }) => {
 
     const fetchReviews = async () => {
       try {
-        const response = await axios.get<Review[]>(`/api/review/${ISBN}`);
+        const response = await axios.get(`/api/review/${ISBN}`);
         setReviews(response.data);
       } catch (error) {
         console.error("Error fetching reviews:", error);
@@ -70,7 +70,7 @@ const Review = ({ ISBN }: { ISBN: number }) => {
         setComment('');
         setRating(0);
         // Re-fetch reviews after submitting a new review
-        const reviewResponse = await axios.get<Review[]>(`/api/review/${ISBN}`);
+        const reviewResponse = await axios.get(`/api/review/${ISBN}`);
         setReviews(reviewResponse.data);
       } else {
         console.error('Failed to submit review');
